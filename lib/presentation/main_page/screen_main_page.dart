@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/presentation/downloads/screen_downloads.dart';
-import 'package:netflix/presentation/fast_laugh/Screen_fast_laugh.dart';
+import 'package:netflix/presentation/fast_laugh/screen_fast_laugh.dart';
 import 'package:netflix/presentation/main_page/home/screen_home.dart';
 import 'package:netflix/presentation/main_page/widgets/bottom_nav.dart';
 import 'package:netflix/presentation/new_and_hot/screen_new_and_hot.dart';
