@@ -1,14 +1,18 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:netflix/core/colors/colors.dart';
 import 'package:netflix/core/constants.dart';
-import 'package:netflix/presentation/main_page/widgets/app_bar_widget.dart';
+import 'package:netflix/core/strings.dart';
+import 'package:netflix/domian/model/movies.dart';
+import 'package:netflix/presentation/downloads/widgets/downloads_loading.dart';
+import 'package:netflix/presentation/widgets/app_bar_widget.dart';
 
 class screenDownloads extends StatelessWidget {
   screenDownloads({Key? key}) : super(key: key);
   final _widgetList = [
     const _Smartdownloads(),
-    const section2(),
+     section2(),
     const section3(),
   ];
   @override
@@ -31,7 +35,8 @@ class screenDownloads extends StatelessWidget {
 }
 
 class section2 extends StatelessWidget {
-  const section2({Key? key}) : super(key: key);
+  late Future<List<Movie>> trending;
+  section2({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -57,32 +62,53 @@ class section2 extends StatelessWidget {
       SizedBox(
           width: size.width,
           height: 280,
-          child: Stack(alignment: Alignment.center, children: [
-            CircleAvatar(
-              radius: size.width * .30,
-              backgroundColor: Colors.grey[800],
-            ),
-            const DownloadsImageWidget(
-              margin: EdgeInsets.only(left: 120, top: 5),
-              imagelist: '',
-              angle: 20,
-              height: 150,
-              width: 130,
-            ),
-            const DownloadsImageWidget(
-              margin: EdgeInsets.only(right: 120, top: 5),
-              imagelist: '',
-              angle: -20,
-              height: 150,
-              width: 130,
-            ),
-            const DownloadsImageWidget(
-              margin: EdgeInsets.only(bottom: 40, top: 68),
-              imagelist: '',
-              height: 175,
-              width: 130,
-            )
-          ]))
+          child: FutureBuilder(
+              future: trending,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Center(
+                    child: SpinKitFadingCircle(
+                      itemBuilder: (BuildContext context, int index) {
+                        return DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: index.isEven ? Colors.red : Colors.green,
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  return Stack(alignment: Alignment.center, children: [
+                    CircleAvatar(
+                      radius: size.width * .30,
+                      backgroundColor: Colors.grey[800],
+                    ),
+                    DownloadsImageWidget(
+                      margin: const EdgeInsets.only(left: 120, top: 5),
+                      imagelist: imageBaseUrl + snapshot.data![4].posterPath,
+                      angle: 20,
+                      height: 150,
+                      width: 130,
+                    ),
+                    DownloadsImageWidget(
+                      margin: const EdgeInsets.only(right: 120, top: 5),
+                      imagelist: imageBaseUrl + snapshot.data![5].posterPath,
+                      angle: -20,
+                      height: 150,
+                      width: 130,
+                    ),
+                    DownloadsImageWidget(
+                      margin: const EdgeInsets.only(bottom: 40, top: 68),
+                      imagelist: imageBaseUrl + snapshot.data![6].posterPath,
+                      height: 175,
+                      width: 130,
+                    )
+                  ]);
+                }else{
+                  return DownloadsLoadingWidget(size: size);
+
+                }
+              }))
     ]);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:netflix/presentation/fast_laugh/widget/main_title.dart';
-import 'package:netflix/presentation/main_page/widgets/main_card.dart';
+import 'package:netflix/presentation/widgets/main_card.dart';
 
 
 class MainCardTitle extends StatelessWidget {

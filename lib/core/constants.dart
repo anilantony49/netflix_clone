@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 const kwidth = SizedBox(
   width: 20,
@@ -23,3 +24,26 @@ const imageappendUrl = "https://image.tmdb.org/t/p/w500";
 //text Style
 TextStyle khomeTextStle =
     const TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
+
+
+kWidth(double width) => SizedBox(width: width);
+kHeight(double height) => SizedBox(height: height);
+
+const kTextStyleHome = TextStyle(
+  fontSize: 14,
+  fontWeight: FontWeight.w400,
+);
+
+final shimmerGradient = LinearGradient(
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+  colors: <Color>[
+    Colors.grey[900]!,
+    Colors.grey[900]!,
+    Colors.grey[800]!,
+    Colors.grey[900]!,
+    Colors.grey[900]!
+  ],
+  stops: const <double>[0.0, 0.35, 0.5, 0.65, 1.0],
+);
+

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:netflix/core/constants.dart';
-import 'package:netflix/presentation/main_page/widgets/background_card.dart';
-import 'package:netflix/presentation/main_page/widgets/main_title_card.dart';
-import 'package:netflix/presentation/main_page/widgets/numbertitle_card.dart';
+import 'package:netflix/presentation/widgets/background_card.dart';
+import 'package:netflix/presentation/widgets/main_title_card.dart';
+import 'package:netflix/presentation/widgets/numbertitle_card.dart';
 
 class ScreenHome extends StatelessWidget {
   ScreenHome({Key? key}) : super(key: key);
