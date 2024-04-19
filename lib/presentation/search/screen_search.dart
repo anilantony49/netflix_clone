@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:netflix/services/api_services.dart';
 
 import 'package:netflix/core/constants.dart';
 import 'package:netflix/core/debounce/debounce.dart';
@@ -20,8 +21,9 @@ class _screenSearchState extends State<screenSearch> {
   late Future<List<Movie>> popularSearches;
   late Future<List<Series>> seriesList;
   final _debouncer = Debouncer(milliseconds: 1 * 1000);
+  bool isTapped = false;
 
-    @override
+  @override
   void initState() {
     popularSearches = getAllMoviesList('');
     seriesList = getAllSeriesList('');
@@ -38,30 +40,33 @@ class _screenSearchState extends State<screenSearch> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             CupertinoSearchTextField(
-                backgroundColor: Colors.grey.withOpacity(.25),
-                prefixIcon: const Icon(
-                  CupertinoIcons.search,
-                  color: Colors.grey,
-                ),
-                suffixIcon: const Icon(CupertinoIcons.xmark_circle_fill,
-                    color: Colors.grey),
-                style: const TextStyle(color: Colors.white),
-                onChanged: (value) {
-                  if (value.isEmpty) {
-                    return;
-                  }
-                  _debouncer.run(() {});
-                }),
-            kheight,
-            Expanded(child: BlocBuilder<SearchBloc, SearchState>(
-              builder: (context, state) {
-                if (state.searchResultList.isEmpty) {
-                  return const searchIdleWidget();
-                } else {
-                  return const searchReasult();
-                }
+              backgroundColor: Colors.grey.withOpacity(.25),
+              prefixIcon: const Icon(
+                CupertinoIcons.search,
+                color: Colors.grey,
+              ),
+              suffixIcon: const Icon(CupertinoIcons.xmark_circle_fill,
+                  color: Colors.grey),
+              style: const TextStyle(color: Colors.white),
+              onChanged: (value) {
+                _debouncer.run(() {
+                  setState(() {
+                    popularSearches = getAllMoviesList(value);
+                    seriesList = getAllSeriesList(value);
+                  });
+                });
               },
-            )),
+              onTap: () {
+                setState(() {
+                  isTapped = true;
+                });
+              },
+            ),
+            kheight,
+            isTapped
+                ?  Expanded(child: searchReasult(movieList: popularSearches,
+                        seriesList: seriesList,))
+                :  Expanded(child: searchIdleWidget(popularSearches: popularSearches))
             // Expanded(child: const searchReasult()) ,
           ],
         ),
