@@ -7,4 +7,6 @@ const kbuttonColorblue = Colors.blue;
 const kbuttonColorwhite = Colors.white;
 const kblackColor = Colors.black;
 const kGreyColor = Color(0xFF414141);
+const kWhiteColor = Colors.white;
+
 

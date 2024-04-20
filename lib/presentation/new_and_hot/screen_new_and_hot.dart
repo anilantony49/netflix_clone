@@ -1,141 +1,129 @@
-
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
-import 'package:netflix/core/colors/colors.dart';
-import 'package:netflix/core/constants.dart';
-import 'package:netflix/presentation/new_and_hot/widget/commingsoon.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:netflix/core/strings.dart';
+import 'package:netflix/domian/model/movies.dart';
+import 'package:netflix/domian/model/series.dart';
+import 'package:netflix/presentation/new_and_hot/widget/appbar.dart';
+import 'package:netflix/presentation/new_and_hot/widget/comming_soon.dart';
 import 'package:netflix/presentation/new_and_hot/widget/everyones_watching.dart';
+import 'package:netflix/services/api_services.dart';
 
+class ScreenNewAndHot extends StatefulWidget {
+  const ScreenNewAndHot({super.key});
 
+  @override
+  State<ScreenNewAndHot> createState() => _ScreenNewAndHotState();
+}
 
-class ScreenNewAndHot extends StatelessWidget {
-  const ScreenNewAndHot({Key? key}) : super(key: key);
+class _ScreenNewAndHotState extends State<ScreenNewAndHot> {
+  late Future<List<Movie>> upComingMovies;
+  late Future<List<Series>> popularSeries;
+
+  @override
+  void initState() {
+    upComingMovies = getAllUpcomingMovies();
+    popularSeries = getAllPopularSeries();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+    final size = MediaQuery.of(context).size;
+    return SafeArea(
+      child: DefaultTabController(
         length: 2,
         child: Scaffold(
           appBar: PreferredSize(
-              preferredSize: const Size.fromHeight(110),
-              child: AppBar(
-                  title: Text(
-                    "Hot & New",
-                    style: GoogleFonts.montserrat(
-                        fontSize: 30, fontWeight: FontWeight.bold),
-                  ),
-                  actions: [
-                    const Icon(
-                      Icons.cast,
-                      color: Color.fromARGB(255, 230, 225, 225),
-                      size: 30,
-                    ),
-                    kwidth,
-                    Container(
-                      width: 30,
-                      height: 30,
-                      color: Colors.white,
-                    ),
-                    kwidth,
-                  ],
-                  bottom: TabBar(
-                      padding: const EdgeInsets.all(15),
-                      isScrollable: true,
-                      labelColor: kblackColor,
-                      unselectedLabelColor: KwhiteColor,
-                      labelStyle: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
-                      indicator: BoxDecoration(
-                          color: KwhiteColor, borderRadius: kRadius30),
-                      tabs: const [
-                        Tab(text: "🧁 Coming Soon"),
-                        Tab(text: "👀 Everyone's Watching"),
-                      ]))),
-          body: const TabBarView(children: [
-            ComingSoonList(
-              key: Key('coming soon'),
-            ),
-            EveryonesWatchingList(key: Key('EveryOnesWatching'))
-          ]),
-        ));
+            preferredSize: Size.fromHeight(size.height * 0.115),
+            child: const NewAndHotAppBar(),
+          ),
+          body: TabBarView(
+            children: [
+              _tabViewOne(context, upComingMovies, size),
+              _tavViewTwo(popularSeries),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _tabViewOne(
+    BuildContext context,
+    Future<List<Movie>> upComingMovies,
+    Size size,
+  ) {
+    return FutureBuilder(
+      future: upComingMovies,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return const Text('Error loading');
+        } else if (snapshot.hasData) {
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: 10,
+            itemBuilder: (context, index) {
+              return ComingSoonCard(
+                image: imageBaseUrl + snapshot.data![index].backdropPath,
+                title: snapshot.data![index].title,
+                overview: snapshot.data![index].overView,
+                date: snapshot.data![index].releaseDate,
+              );
+            },
+          );
+        } else {
+          return SpinKitFadingCircle(
+            itemBuilder: (BuildContext context, int index) {
+              return DecoratedBox(
+                decoration: BoxDecoration(
+                  color: index.isEven ? Colors.red : Colors.green,
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
+  }
+
+  Widget _tavViewTwo(Future<List<Series>> popularMovies) {
+    return FutureBuilder(
+      future: popularMovies,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          return SpinKitFadingCircle(
+            itemBuilder: (BuildContext context, int index) {
+              return DecoratedBox(
+                decoration: BoxDecoration(
+                  color: index.isEven ? Colors.red : Colors.green,
+                ),
+              );
+            },
+          );
+        } else if (snapshot.hasData) {
+          return ListView.builder(
+            itemCount: 10,
+            shrinkWrap: true,
+            itemBuilder: (context, index) {
+              return EveryWatchCard(
+                image: imageBaseUrl + snapshot.data![index].backdropPath,
+                title: snapshot.data![index].title,
+                overview: snapshot.data![index].overView,
+              );
+            },
+          );
+        } else {
+          return SpinKitFadingCircle(
+            itemBuilder: (BuildContext context, int index) {
+              return DecoratedBox(
+                decoration: BoxDecoration(
+                  color: index.isEven ? Colors.red : Colors.green,
+                ),
+              );
+            },
+          );
+        }
+      },
+    );
   }
 }
-
-class ComingSoonList extends StatelessWidget {
-  const ComingSoonList({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
- 
-    return RefreshIndicator(
-      onRefresh: ()async{
-        // BlocProvider.of<HotandnewBloc>(context).add(const LoadDataInComigSoon());
-      },
-      child: ListView.builder(
-            // padding:const EdgeInsets.all(15),
-              itemCount:10,
-              itemBuilder: (BuildContext context, index) {
-                final movie = state.commingSoonList[index];
-                //   if(movie.id==null){
-                // return const SizedBox();
-                //   }
-                log(movie.releaseDate.toString());
-                String month = '';
-                String date = '';
-                try {
-                  final _date = DateTime.tryParse(movie.releaseDate!);
-                  final formatedDate = DateFormat.yMMMMd('en_US').format(_date!);
-                  log(formatedDate.toString());
-                  month =
-                      formatedDate.split(' ').first.substring(0, 3).toUpperCase();
-    
-                  date = movie.releaseDate!.split('-')[1];
-                } catch (_) {
-                  month = '';
-                  date = '';
-                }
-    
-                return ComingSoonWidget(
-                    id: movie.id.toString(),
-                    month: month,
-                    day: date,
-                    posterpath: '$imageappendUrl${movie.posterPath}',
-                    moviename: movie.originalTitle ?? 'No Title',
-                    discription: movie.overview ?? 'No description');
-              }));
-        }
-      }
-
-
-class EveryonesWatchingList extends StatelessWidget {
-  const EveryonesWatchingList({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-   
-    return RefreshIndicator(
-      onRefresh: ()async{
-      
-      },
-      child: ListView.builder(
-            padding:const EdgeInsets.all(15),
-              itemCount: state.everyOneIsList.length,
-              itemBuilder: (BuildContext context, index) {
-                final movie = state.everyOneIsList[index];
-                // if (movie.id == null) {
-                //   return const SizedBox();
-                // }
-                
-    
-                final tv = state.everyOneIsList[index];
-    
-                return EveryOnesWatchingWidget(
-                    posterpath: '$imageappendUrl${tv.posterPath}',
-                    moviename: tv.originalName ?? 'No movie name',
-                    discription: tv.overview ?? 'No discription');
-              }));
-        }
-      }

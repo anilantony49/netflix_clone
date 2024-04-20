@@ -40,3 +40,29 @@ Future<List<Series>> getAllSeriesList(String value) async {
     throw Exception('Server Failure Please Try Again!!!');
   }
 }
+
+String upComingMovies = ApiEndPoints.upComingMovies;
+
+Future<List<Movie>> getAllUpcomingMovies() async {
+  final response = await http.get(Uri.parse(upComingMovies));
+  if (response.statusCode == 200) {
+    final bodyAsJson = jsonDecode(response.body) as Map<String, dynamic>;
+    final data = MovieList.fromJson(bodyAsJson['results']);
+    return data.movieList;
+  } else {
+    throw Exception('Server Failure Please Try Again!!!');
+  }
+}
+
+String popularSeries = ApiEndPoints.popularSeries;
+
+Future<List<Series>> getAllPopularSeries() async {
+  final response = await http.get(Uri.parse(popularSeries));
+  if (response.statusCode == 200) {
+    final bodyAsJson = jsonDecode(response.body) as Map<String, dynamic>;
+    final data = SeriesList.fromJson(bodyAsJson['results']);
+    return data.seriesList;
+  } else {
+    throw Exception('Server Failure Please Try Again!!!');
+  }
+}
