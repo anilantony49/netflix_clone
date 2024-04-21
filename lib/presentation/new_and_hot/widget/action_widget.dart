@@ -39,15 +39,6 @@ class _ActionWidgetState extends State<ActionWidget> {
       child: Column(
         children: [
           InkWell(
-            onTap: () {
-              setState(() {
-                if (widget.playerController!.value.isPlaying) {
-                  widget.playerController!.pause();
-                } else {
-                  widget.playerController!.play();
-                }
-              });
-            },
             child: PhysicalModel(
               color: Colors.transparent,
               elevation: 5,

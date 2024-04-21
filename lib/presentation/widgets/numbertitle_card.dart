@@ -1,35 +1,60 @@
 import 'package:flutter/material.dart';
-import 'package:netflix/presentation/fast_laugh/widget/main_title.dart';
-import 'package:netflix/presentation/main_page/home/number_card.dart';
+import 'package:netflix/core/strings.dart';
+import 'package:netflix/presentation/widgets/listview_loading.dart';
+import 'package:netflix/presentation/widgets/main_title.dart';
+import 'package:netflix/presentation/widgets/number_card.dart';
+
 
 class NumberTitleCard extends StatelessWidget {
   const NumberTitleCard({
-    Key? key, required this.postersList,
-  }) : super(key: key);
-  final List<String> postersList;
+    super.key,
+    required this.size,
+    required this.series,
+  });
+
+  final Size size;
+  final Future<List<dynamic>> series;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
-          child: Maintitle(title: 'Top 10 Tv Shows in India Today'),
-        ),
-        // kheight,
-        LimitedBox(
-          maxHeight: 200,
-          child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: List.generate(
-                  postersList.length,
-                  (index) => NumberCard(
-                        index: index,
-                        imageUrl:postersList[index],
-                      ))),
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const MainTitle(
+            title: 'Top 10 TV shows Today',
+          ),
+          FutureBuilder(
+              future: series,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return ErrorLoading(size: size);
+                } else if (snapshot.hasData) {
+                  return LimitedBox(
+                    maxHeight: 200,
+                    child: ListView(
+                      scrollDirection: Axis.horizontal,
+                      children: _generateList(snapshot),
+                    ),
+                  );
+                } else {
+                  return ListViewLoading(size: size);
+                }
+              }),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> _generateList(AsyncSnapshot snapshot) {
+    return List.generate(
+      10,
+      (index) => NumberCard(
+        index: index,
+        size: size,
+        image: imageBaseUrl + snapshot.data![index].posterPath,
+      ),
     );
   }
 }

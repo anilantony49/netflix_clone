@@ -1,7 +1,7 @@
 const kBaseUrl = "https://api.themoviedb.org/3";
 const imageBaseUrl = "https://image.tmdb.org/t/p/w500";
 const mainImage =
-    "https://firebasestorage.googleapis.com/v0/b/api-netflix-4acce.appspot.com/o/Error%20image.jpg?alt=media&token=902c101f-c10e-4f4e-8318-aad84c640ff3";
+    "https://images.complex.com/complex/images/c_fill,dpr_auto,f_auto,q_auto,w_1400/fl_lossy,pg_1/wjnhpz3osrai5aningjl/titanic?fimg-client";
 
 // ======== Custom icons ========
 

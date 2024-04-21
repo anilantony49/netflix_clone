@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:netflix/core/constants.dart';
 import 'package:netflix/core/strings.dart';
 import 'package:netflix/presentation/new_and_hot/widget/action_widget.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:intl/intl.dart';
 
 class ComingSoonCard extends StatelessWidget {
@@ -121,15 +120,8 @@ class ComingSoonCard extends StatelessWidget {
                 height: size.height,
               ),
             ),
-            placeholder: (context, url) => Shimmer(
-              gradient: shimmerGradient,
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
-                  color: Colors.black,
-                ),
-              ),
-            ),
+            placeholder: (context, url) =>
+                const Center(child: CircularProgressIndicator()),
           ),
           Positioned(
             top: 10,

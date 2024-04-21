@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:netflix/core/strings.dart';
 import 'package:netflix/domian/model/movies.dart';
 import 'package:netflix/domian/model/series.dart';
@@ -72,15 +71,7 @@ class _ScreenNewAndHotState extends State<ScreenNewAndHot> {
             },
           );
         } else {
-          return SpinKitFadingCircle(
-            itemBuilder: (BuildContext context, int index) {
-              return DecoratedBox(
-                decoration: BoxDecoration(
-                  color: index.isEven ? Colors.red : Colors.green,
-                ),
-              );
-            },
-          );
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );
@@ -91,15 +82,7 @@ class _ScreenNewAndHotState extends State<ScreenNewAndHot> {
       future: popularMovies,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return SpinKitFadingCircle(
-            itemBuilder: (BuildContext context, int index) {
-              return DecoratedBox(
-                decoration: BoxDecoration(
-                  color: index.isEven ? Colors.red : Colors.green,
-                ),
-              );
-            },
-          );
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasData) {
           return ListView.builder(
             itemCount: 10,
@@ -113,15 +96,7 @@ class _ScreenNewAndHotState extends State<ScreenNewAndHot> {
             },
           );
         } else {
-          return SpinKitFadingCircle(
-            itemBuilder: (BuildContext context, int index) {
-              return DecoratedBox(
-                decoration: BoxDecoration(
-                  color: index.isEven ? Colors.red : Colors.green,
-                ),
-              );
-            },
-          );
+          return const CircularProgressIndicator();
         }
       },
     );

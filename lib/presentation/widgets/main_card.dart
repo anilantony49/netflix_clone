@@ -1,29 +1,38 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:netflix/core/constants.dart';
 
-class MainCard1 extends StatelessWidget {
-  final String ImageUrl;
-  const MainCard1({
-    Key? key,
-    required this.ImageUrl,
-  }) : super(key: key);
+
+class MainCard extends StatelessWidget {
+  const MainCard({
+    super.key,
+    required this.size,
+    required this.image,
+  });
+
+  final Size size;
+  final String image;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      // padding: EdgeInsets.symmetric(horizontal: 8),
-      margin: const EdgeInsets.all(4),
-      width: 130,
-      height: 280,
-
-      // color: Colors.red,
-      decoration: BoxDecoration(
-          borderRadius: kRadius10,
-          image: DecorationImage(
-              fit: BoxFit.cover,
-              image: NetworkImage(
-                ImageUrl,
-              ))),
+      margin: const EdgeInsets.only(right: 10),
+      width: size.width * 0.35,
+      height: size.height * 0.23,
+      child: FutureBuilder(
+          future: null,
+          builder: (context, snapshot) {
+            return CachedNetworkImage(
+              imageUrl: image,
+              imageBuilder: (context, imageProvider) => ClipRRect(
+                borderRadius: BorderRadius.circular(5.0),
+                child: Image(
+                  image: imageProvider,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              placeholder: (context, url) => const Center(child: CircularProgressIndicator(),)
+            );
+          }),
     );
   }
 }

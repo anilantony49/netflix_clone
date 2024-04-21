@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:netflix/core/constants.dart';
 import 'package:netflix/core/strings.dart';
 import 'package:netflix/domian/model/movies.dart';
 import 'package:netflix/presentation/search/search_widgets/title.dart';
 
-class searchIdleWidget extends StatelessWidget {
-  const searchIdleWidget({
+class SearchIdleWidget extends StatelessWidget {
+  const SearchIdleWidget({
     Key? key,
     required this.popularSearches,
   }) : super(key: key);
@@ -19,7 +18,7 @@ class searchIdleWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const searchTilewidget(
+        const SearchTilewidget(
           title: 'Top Searches',
         ),
         kheight,
@@ -27,15 +26,7 @@ class searchIdleWidget extends StatelessWidget {
             future: popularSearches,
             builder: (context, snapshot) {
               if (snapshot.hasError) {
-                return SpinKitFadingCircle(
-                  itemBuilder: (BuildContext context, int index) {
-                    return DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: index.isEven ? Colors.red : Colors.green,
-                      ),
-                    );
-                  },
-                );
+                return const Center(child: CircularProgressIndicator());
               } else if (snapshot.hasData) {
                 return Expanded(
                   child: ListView.separated(
@@ -44,7 +35,7 @@ class searchIdleWidget extends StatelessWidget {
                       return TopSearchItemTile(
                         title: snapshot.data![index].title,
                         imageUrl:
-                            imageBaseUrl + snapshot.data![index].backdropPath,
+                            imageBaseUrl + snapshot.data![index].posterPath,
                       );
                     },
                     separatorBuilder: (context, index) => k25height,
@@ -52,15 +43,7 @@ class searchIdleWidget extends StatelessWidget {
                   ),
                 );
               } else {
-                return SpinKitFadingCircle(
-                  itemBuilder: (BuildContext context, int index) {
-                    return DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: index.isEven ? Colors.red : Colors.green,
-                      ),
-                    );
-                  },
-                );
+                return const Center(child: CircularProgressIndicator());
               }
             })
       ],

@@ -8,5 +8,15 @@ const kbuttonColorwhite = Colors.white;
 const kblackColor = Colors.black;
 const kGreyColor = Color(0xFF414141);
 const kWhiteColor = Colors.white;
+const kButtonBlueColor = Color(0xFF4B6AEA);
+const kButtonWhiteColor = Colors.white;
+const kBlackColor = Colors.black;
+const backgroundColor = Colors.black;
+
+
+
+
+
+
 
 

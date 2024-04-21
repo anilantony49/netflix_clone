@@ -5,28 +5,27 @@ import 'package:netflix/services/api_services.dart';
 import 'package:netflix/core/constants.dart';
 import 'package:netflix/core/debounce/debounce.dart';
 import 'package:netflix/domian/model/movies.dart';
-import 'package:netflix/domian/model/series.dart';
 import 'package:netflix/presentation/search/search_widgets/search_idle.dart';
 import 'package:netflix/presentation/search/search_widgets/search_result.dart';
 
-class screenSearch extends StatefulWidget {
-  screenSearch({Key? key}) : super(key: key);
+class ScreenSearch extends StatefulWidget {
+  const ScreenSearch({Key? key}) : super(key: key);
 
   @override
-  State<screenSearch> createState() => _screenSearchState();
+  State<ScreenSearch> createState() => _ScreenSearchState();
 }
 
-class _screenSearchState extends State<screenSearch> {
+class _ScreenSearchState extends State<ScreenSearch> {
   final TextEditingController searchController = TextEditingController();
   late Future<List<Movie>> popularSearches;
-  late Future<List<Series>> seriesList;
+  // late Future<List<Series>> seriesList;
   final _debouncer = Debouncer(milliseconds: 1 * 1000);
   bool isTapped = false;
 
   @override
   void initState() {
     popularSearches = getAllMoviesList('');
-    seriesList = getAllSeriesList('');
+    // seriesList = getAllSeriesList('');
     super.initState();
   }
 
@@ -52,7 +51,8 @@ class _screenSearchState extends State<screenSearch> {
                 _debouncer.run(() {
                   setState(() {
                     popularSearches = getAllMoviesList(value);
-                    seriesList = getAllSeriesList(value);
+                    // seriesList = getAllSeriesList(value);
+                    // isTapped = true;
                   });
                 });
               },
@@ -64,9 +64,13 @@ class _screenSearchState extends State<screenSearch> {
             ),
             kheight,
             isTapped
-                ?  Expanded(child: searchReasult(movieList: popularSearches,
-                        seriesList: seriesList,))
-                :  Expanded(child: searchIdleWidget(popularSearches: popularSearches))
+                ? Expanded(
+                    child: SearchReasult(
+                    movieList: popularSearches,
+                    // seriesList: seriesList,
+                  ))
+                : Expanded(
+                    child: SearchIdleWidget(popularSearches: popularSearches))
             // Expanded(child: const searchReasult()) ,
           ],
         ),

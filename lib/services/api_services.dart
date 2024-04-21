@@ -66,3 +66,68 @@ Future<List<Series>> getAllPopularSeries() async {
     throw Exception('Server Failure Please Try Again!!!');
   }
 }
+
+String popularMovie = ApiEndPoints.popularMovies;
+
+Future<List<Movie>> getAllPopular() async {
+  final response = await http.get(Uri.parse(popularMovie));
+  if (response.statusCode == 200) {
+    final bodyAsJson = jsonDecode(response.body) as Map<String, dynamic>;
+    final data = MovieList.fromJson(bodyAsJson['results']);
+    return data.movieList;
+  } else {
+    throw Exception('Server Failure Please Try Again!!!');
+  }
+}
+
+String trendingMovie = ApiEndPoints.trendingMovies;
+
+Future<List<Movie>> getAllTrending() async {
+  final response = await http.get(Uri.parse(trendingMovie));
+  if (response.statusCode == 200) {
+    final bodyAsJson = jsonDecode(response.body) as Map<String, dynamic>;
+    final data = MovieList.fromJson(bodyAsJson['results']);
+    return data.movieList;
+  } else {
+    throw Exception('Server Failure Please Try Again!!!');
+  }
+}
+
+String topRatedSeries = ApiEndPoints.topRatedSeries;
+
+Future<List<Series>> getAllTopRatedSeries() async {
+  final response = await http.get(Uri.parse(topRatedSeries));
+  if (response.statusCode == 200) {
+    final bodyAsJson = jsonDecode(response.body) as Map<String, dynamic>;
+    final data = SeriesList.fromJson(bodyAsJson['results']);
+    return data.seriesList;
+  } else {
+    throw Exception('Server Failure Please Try Again!!!');
+  }
+}
+
+String pastYearMovies = ApiEndPoints.pastYearMovies;
+
+Future<List<Movie>> getAllPastYearMovies() async {
+  final response = await http.get(Uri.parse(pastYearMovies));
+  if (response.statusCode == 200) {
+    final bodyAsJson = jsonDecode(response.body) as Map<String, dynamic>;
+    final data = MovieList.fromJson(bodyAsJson['results']);
+    return data.movieList;
+  } else {
+    throw Exception('Server Failure Please Try Again!!!');
+  }
+}
+
+String airingTodaySeries = ApiEndPoints.airingTodaySeries;
+
+Future<List<Series>> getAllSeriesAiringToday() async {
+  final response = await http.get(Uri.parse(airingTodaySeries));
+  if (response.statusCode == 200) {
+    final bodyAsJson = jsonDecode(response.body) as Map<String, dynamic>;
+    final data = SeriesList.fromJson(bodyAsJson['results']);
+    return data.seriesList;
+  } else {
+    throw Exception('Server Failure Please Try Again!!!');
+  }
+}

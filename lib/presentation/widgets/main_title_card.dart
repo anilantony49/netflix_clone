@@ -1,36 +1,69 @@
 import 'package:flutter/material.dart';
-import 'package:netflix/presentation/fast_laugh/widget/main_title.dart';
+import 'package:netflix/core/strings.dart';
+import 'package:netflix/presentation/widgets/listview_loading.dart';
 import 'package:netflix/presentation/widgets/main_card.dart';
+import 'package:netflix/presentation/widgets/main_title.dart';
 
 
-class MainCardTitle extends StatelessWidget {
+class MainTitleCard extends StatelessWidget {
+  const MainTitleCard({
+    super.key,
+    required this.size,
+    required this.title,
+    required this.movies,
+    this.reversed = false,
+  });
+
+  final Size size;
   final String title;
-  final List<String>posterList;
-  const MainCardTitle({
-    Key? key,
-    required this.title, required this.posterList,
-  }) : super(key: key);
+  final Future<List<dynamic>> movies;
+  final bool reversed;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Maintitle(title: title),
-        ),
-        // kheight,
-        LimitedBox(
-          maxHeight: 200,
-          child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: List.generate(
-              posterList.length,
-                (index) =>  MainCard1(ImageUrl: posterList[index]),
-              )),
-        )
-      ],
+    return Padding(
+      padding: const EdgeInsets.only(top: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          MainTitle(
+            title: title,
+          ),
+          FutureBuilder(
+            future: movies,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return ErrorLoading(size: size);
+              } else if (snapshot.hasData) {
+                return LimitedBox(
+                  maxHeight: 200,
+                  child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: _generateList(reversed, snapshot),
+                  ),
+                );
+              } else {
+                return ListViewLoading(size: size);
+              }
+            },
+          ),
+        ],
+      ),
     );
+  }
+
+  List<Widget> _generateList(bool reversed, AsyncSnapshot snapshot) {
+    List<Widget> generatedList = List.generate(
+      snapshot.data!.length,
+      (index) => MainCard(
+        size: size,
+        image: imageBaseUrl + snapshot.data![index].posterPath,
+      ),
+    );
+
+    if (reversed) {
+      return generatedList = generatedList.reversed.toList();
+    }
+    return generatedList;
   }
 }

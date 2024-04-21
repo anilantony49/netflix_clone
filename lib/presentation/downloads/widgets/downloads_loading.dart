@@ -2,8 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:netflix/core/colors/colors.dart';
-import 'package:netflix/core/constants.dart';
-import 'package:shimmer/shimmer.dart';
 
 
 class DownloadsLoadingWidget extends StatelessWidget {
@@ -55,13 +53,9 @@ class DownloadsLoadingWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
         ),
-        child: Shimmer(
-          gradient: shimmerGradient,
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Colors.black,
-            ),
+        child: const Center(
+          child: CircularProgressIndicator(
+           
           ),
         ),
       ),
